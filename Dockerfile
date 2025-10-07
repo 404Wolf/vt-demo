@@ -1,24 +1,26 @@
-# syntax=docker/dockerfile:1
+FROM alpine:3.20
 
-FROM golang:1.24-alpine AS build
+RUN apk add --no-cache \
+  deno \
+  ttyd \
+  bash \
+  coreutils \
+  ncurses \
+  shadow \
+  unzip \
+  curl \
+  ca-certificates
 
-# Set destination for COPY
-WORKDIR /app
+RUN useradd -m -s /bin/bash appuser
+USER appuser
+WORKDIR /home/appuser
 
-# Download any Go modules
-COPY container_src/go.mod ./
-RUN go mod download
+ENV PATH="/home/appuser/.deno/bin:${PATH}"
 
-# Copy container source code
-COPY container_src/*.go ./
+RUN deno install -grAf jsr:@valtown/vt
 
-# Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /server
+COPY src/entrypoint.sh /home/appuser/entrypoint.sh
+COPY src/init.sh       /home/appuser/init.sh
 
-FROM scratch
-COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=build /server /server
 EXPOSE 8080
-
-# Run
-CMD ["/server"]
+ENTRYPOINT ["/home/appuser/entrypoint.sh"]
