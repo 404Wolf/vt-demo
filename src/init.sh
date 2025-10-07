@@ -20,3 +20,4 @@ export PATH="/home/appuser/.deno/bin:$PATH"
 vt --help
 
 echo -n "vt create test$(shuf -i 1000-9999 -n 1)"
+bash
