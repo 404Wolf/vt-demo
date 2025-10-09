@@ -4,7 +4,7 @@ import process from "node:process";
 
 export class VTDemo extends Container<Env> {
   override defaultPort = 8080;
-  override sleepAfter = "2m";
+  override sleepAfter = "4m";
   override envVars: Record<string, string> | undefined = {
     "VAL_TOWN_API_KEY": process.env.VAL_TOWN_API_KEY,
   };

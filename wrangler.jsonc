@@ -17,6 +17,7 @@
 	"containers": [
 		{
 			"class_name": "VTDemo",
+      "instance_type": "basic",
 			"image": "./Dockerfile",
 			"max_instances": 5
 		}
